@@ -36,11 +36,11 @@ for i, (aa, bb) in enumerate(train_dataloader):
 '''
 ###############################################################################
 #模型测试
-datacsv = pd.read_csv('val.csv')
+datacsv = pd.read_csv('test.csv')
 xdata = np.arange(200,2001)#x轴
 
 #小拉曼原始数据
-val_csv = pd.read_csv('val.csv')
+val_csv = pd.read_csv('test.csv')
 csv_column = val_csv.columns.tolist()
 
 # 设立三个旗帜变量
@@ -58,7 +58,7 @@ for col in csv_column:
     set_flag = set_flag + ran_data
 
     #大拉曼原始数据
-    test_csv = pd.read_csv('test.csv',header=None)
+    test_csv = pd.read_csv('val.csv',header=None)
     noise = np.random.rand(1801,)# 加噪声
     test_data_csv = np.array(test_csv.iloc[:,set_flag]) + noise
     #train_data_csv = pull_baseline(xdata, nor_max(train_csv.iloc[:,0])) 

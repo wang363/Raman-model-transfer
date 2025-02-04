@@ -1,7 +1,7 @@
 # encoding: utf-8
 from cyclemodels import *
 from cycleutils import *
-from function import pull_baseline
+# from function import pull_baseline
 import matplotlib.pyplot as plt
 import os
 
@@ -19,8 +19,8 @@ def nor_max(arrlist):
 os.environ["CUDA_VISIBLE_DEVICES"] = '0'
 device = 'cpu'
 #device = 'cuda'
-pic_path = './test_A2B_pic/'
-GAN_path = '../模型迁移数据库/GAN生成数据/大拉曼/'
+pic_path = '/test_A2B_pic/'
+GAN_path = 'generated_data/' # save_generated_data
 
 #测试模型生成数据
 model = torch.load('A2B_model.pt', map_location=device)
@@ -36,11 +36,11 @@ for i, (aa, bb) in enumerate(train_dataloader):
 '''
 ###############################################################################
 #模型测试
-datacsv = pd.read_csv('test.csv')
+datacsv = pd.read_csv('val.csv')
 xdata = np.arange(200,2001)#x轴
 
 #小拉曼原始数据
-val_csv = pd.read_csv('test.csv')
+val_csv = pd.read_csv('val.csv')
 csv_column = val_csv.columns.tolist()
 
 # 设立三个旗帜变量
@@ -49,7 +49,7 @@ num_epoch = 0
 flag = 0
 for col in csv_column:
     gan_csv = pd.DataFrame()
-    if num_epoch%4 ==0:# 我每种选了四条数据做验证
+    if num_epoch%4 ==0:# 每种选了四条数据做验证
         set_flag = 100 * flag  # 每种数据100个，因此可以从整数部分开始，就是一个新的数据
         flag = flag + 1
     
@@ -58,7 +58,7 @@ for col in csv_column:
     set_flag = set_flag + ran_data
 
     #大拉曼原始数据
-    test_csv = pd.read_csv('val.csv',header=None)
+    test_csv = pd.read_csv('test.csv',header=None) #
     noise = np.random.rand(1801,)# 加噪声
     test_data_csv = np.array(test_csv.iloc[:,set_flag]) + noise
     #train_data_csv = pull_baseline(xdata, nor_max(train_csv.iloc[:,0])) 
@@ -76,7 +76,7 @@ for col in csv_column:
     new_gendata = model(gendata)
 
     new_gendata =np.squeeze(new_gendata.detach().numpy()) #先将tensor转化为np，然后压缩多余的1维度
-    #new_gendata = new_gendata# 先不归一化
+    #new_gendata = new_gendata# 
     gan_csv.loc[:,0] =  xdata 
     gan_csv.loc[:,1] = new_gendata # 将生成数据保存
     floder_name = max(col.split('_'), key=len) 
@@ -90,7 +90,7 @@ for col in csv_column:
     print(col + '|||' + 'GAN生成数据与小拉曼-余弦相似度为:',sim_gen_xiao)
 
     sim_gen_big = similar_data(new_gendata,test_data_csv)
-    print(col + '*-->*' + 'GAN生成数据与大拉曼-余弦相似度为:',sim_gen_big.round(5))
+    print(col + '*-->*' + 'targrt:GAN生成数据与大拉曼-余弦相似度为:',sim_gen_big.round(5))
 
     sim_xiao_big = similar_data(val_data_csv,test_data_csv)
     print(col + '|||' + '小拉曼数据与大拉曼-余弦相似度为:',sim_xiao_big)
@@ -126,7 +126,8 @@ for col in csv_column:
     plt.xlabel('Raman_shift')
     #plt.ylabel('Intensity')
     plt.legend(prop={'size':13},loc ='lower center',bbox_to_anchor=(0.5,0.5),ncol=3,frameon=False) # ncol=3，3个并排,frameon=False不显示框线
-    plt.savefig(pic_path + str(col) + '_test.png')
-    plt.clf()
+    # plt.show()
+    # plt.savefig(pic_path + str(col) + '_test.png')
+    # plt.clf()
 
     num_epoch += 1

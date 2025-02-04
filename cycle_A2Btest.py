@@ -126,8 +126,8 @@ for col in csv_column:
     plt.xlabel('Raman_shift')
     #plt.ylabel('Intensity')
     plt.legend(prop={'size':13},loc ='lower center',bbox_to_anchor=(0.5,0.5),ncol=3,frameon=False) # ncol=3，3个并排,frameon=False不显示框线
-    # plt.show()
+    plt.show()
     # plt.savefig(pic_path + str(col) + '_test.png')
-    # plt.clf()
+    plt.clf()
 
     num_epoch += 1

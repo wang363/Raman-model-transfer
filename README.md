@@ -7,3 +7,6 @@
 #### **test.csv**  
 ##### 1. Dmoain B. Raman Shift:200-2000 ${cm}^{-1}$
 ##### 2. Raman spectrometer： Horiba LabRAM HR Evolution Raman microscope
+#### **val.csv**  
+##### Use val.csv to test the generation effect of the model
+##### Run cycle_A2Btest.py to generate test images
